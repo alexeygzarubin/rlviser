@@ -90,6 +90,7 @@ fn establish_connection(port: Res<ServerPort>, mut commands: Commands, mut state
     let out_addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), port.primary_port);
     let recv_addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), port.secondary_port);
     let socket = UdpSocket::bind(recv_addr).unwrap();
+    println!("Listening for UDP packets on port {}", port.secondary_port);
 
     let (tx, rx) = crossbeam_channel::unbounded();
     commands.insert_resource(Connection(tx));
@@ -534,9 +535,15 @@ fn start_udp_recv_handler(socket: UdpSocket, commands: &mut Commands) {
                         if code == 10040 {
                             break;
                         }
+                        if code == 10054 {
+                            // Clear the error
+                            let mut dummy = [0; 1];
+                            let _ = socket.recv_from(&mut dummy);
+                            continue;
+                        }
                     }
 
-                    thread::sleep(Duration::from_millis(100));
+                    thread::sleep(Duration::from_millis(10));
                 }
             }
 
@@ -553,11 +560,23 @@ fn start_udp_recv_handler(socket: UdpSocket, commands: &mut Commands) {
                 continue;
             }
 
-            let Ok(packet): Result<rocketsim::Packet, _> =
-                PacketRef::read_as_root(&udp_buffer[packet_size_buffer.len()..]).and_then(|packet| packet.try_into())
-            else {
-                continue;
+            let packet: rocketsim::Packet = match PacketRef::read_as_root(&udp_buffer[packet_size_buffer.len()..]).and_then(|packet| packet.try_into()) {
+                Ok(p) => p,
+                Err(e) => {
+                    println!("Error parsing packet of size {}: {:?}", packet_size, e);
+                    continue;
+                }
             };
+
+            let msg_name = match packet.message {
+                rocketsim::Message::Quit(_) => "Quit",
+                rocketsim::Message::Connection(_) => "Connection",
+                rocketsim::Message::Speed(_) => "Speed",
+                rocketsim::Message::Paused(_) => "Paused",
+                rocketsim::Message::GameState(_) => "GameState",
+                _ => "Unknown",
+            };
+            println!("Received UDP packet: {} (size: {} bytes)", msg_name, packet_size);
 
             match packet.message {
                 rocketsim::Message::Quit(_) => {

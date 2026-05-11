@@ -22,7 +22,7 @@ itertools = "0.14.0"
 bincode = "2.0"
 zip = "7.0.0"
 image = { version = "0.25.1", features = ["tga"], default-features = false }
-tracing = { version = "*", features = ["release_max_level_error"] }
+tracing = { version = "*" }
 itoa = "1.0.15"
 ahash = "0.8.11"
 planus = { git = "https://github.com/swz-git/planus", rev = "a0b1fbf" }
@@ -65,7 +65,7 @@ features = [
 ]
 
 [features]
-default = ["bevy/dynamic_linking"]
+default = []
 full_load = []
 team_goal_barriers = []
 threaded = ["bevy/multi_threaded"]
@@ -81,7 +81,6 @@ opt-level = 3
 [profile.release]
 lto = true
 strip = true
-panic = "abort"
 
 [profile.release-with-debug]
 inherits = "release"

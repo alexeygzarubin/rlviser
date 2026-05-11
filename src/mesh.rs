@@ -608,6 +608,8 @@ fn load_field(
         _ => &STADIUM_P_LAYOUT,
     };
 
+    println!("Loading meshes for game mode...");
+
     let (the_world, structures) = match *game_mode {
         GameMode::Dropshot => {
             let (the_world,): (Node,) = serde_json::from_str(layout).unwrap();
