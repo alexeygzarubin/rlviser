@@ -42,6 +42,7 @@ pub struct Options {
     pub allow_rendering: bool,
     pub packet_smoothing: usize,
     pub calc_ball_rot: bool,
+    pub render_environment: bool,
 }
 
 impl Default for Options {
@@ -67,6 +68,7 @@ impl Default for Options {
             allow_rendering: true,
             packet_smoothing: 1,
             calc_ball_rot: true,
+            render_environment: true,
         }
     }
 }
@@ -114,6 +116,7 @@ impl Options {
                 "allow_rendering" => options.allow_rendering = value.parse().unwrap(),
                 "packet_smoothing" => options.packet_smoothing = serde_json::from_str(value).unwrap(),
                 "calc_ball_rot" => options.calc_ball_rot = value.parse().unwrap(),
+                "render_environment" => options.render_environment = value.parse().unwrap(),
                 _ => println!("Unknown key {key} with value {value}"),
             }
         }
@@ -152,6 +155,7 @@ impl Options {
         file.write_fmt(format_args!("allow_rendering={}\n", self.allow_rendering))?;
         file.write_fmt(format_args!("packet_smoothing={}\n", self.packet_smoothing))?;
         file.write_fmt(format_args!("calc_ball_rot={}\n", self.calc_ball_rot))?;
+        file.write_fmt(format_args!("render_environment={}\n", self.render_environment))?;
 
         Ok(())
     }
@@ -177,6 +181,7 @@ impl Options {
             || self.allow_rendering != other.allow_rendering
             || self.packet_smoothing != other.packet_smoothing
             || self.calc_ball_rot != other.calc_ball_rot
+            || self.render_environment != other.render_environment
     }
 }
 

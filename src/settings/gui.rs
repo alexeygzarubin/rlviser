@@ -232,6 +232,7 @@ fn ui_system(
 
             ui.collapsing("Rendering manager", |ui| {
                 ui.checkbox(&mut options.allow_rendering, "Allow rendering");
+                ui.checkbox(&mut options.render_environment, "Render Environment");
 
                 ui.add_space(10.);
 
@@ -451,5 +452,7 @@ fn listen(
         options.camera_state = PrimaryCamera::Director(0);
     } else if key.just_pressed(KeyCode::Digit0) || key.just_pressed(KeyCode::Numpad0) {
         options.camera_state = PrimaryCamera::Spectator;
+    } else if key.just_pressed(KeyCode::KeyB) {
+        options.render_environment = !options.render_environment;
     }
 }
