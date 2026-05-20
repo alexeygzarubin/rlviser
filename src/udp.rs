@@ -1071,10 +1071,7 @@ fn update_pads_count(
         commands.entity(entity).despawn();
     }
 
-    let large_pad_mesh = match asset_server.get_load_state(&pad_glows.large) {
-        Some(LoadState::Failed(_)) => pad_glows.large_hitbox.clone(),
-        _ => pad_glows.large.clone(),
-    };
+    let large_pad_mesh = pad_glows.large_hitbox.clone();
 
     let small_pad_mesh = match asset_server.get_load_state(&pad_glows.small) {
         Some(LoadState::Failed(_)) => pad_glows.small_hitbox.clone(),
