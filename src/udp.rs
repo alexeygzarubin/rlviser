@@ -574,7 +574,8 @@ fn start_udp_recv_handler(socket: UdpSocket, commands: &mut Commands) {
                 rocketsim::Message::Speed(_) => "Speed",
                 rocketsim::Message::Paused(_) => "Paused",
                 rocketsim::Message::GameState(_) => "GameState",
-                _ => "Unknown",
+                rocketsim::Message::AddRender(_) => "AddRender",
+                rocketsim::Message::RemoveRender(_) => "RemoveRender",
             };
             println!("Received UDP packet: {} (size: {} bytes)", msg_name, packet_size);
 
