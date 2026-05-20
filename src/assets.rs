@@ -327,7 +327,8 @@ fn get_default_material(name: &str, side: Option<Team>) -> Option<StandardMateri
     .contains(&name)
     {
         // primary
-        Color::srgb_u8(45, 49, 66)
+        // Muted Platinum Gray (#B2B0AD) - Primary grass base and wooden floors
+        Color::srgb_u8(178, 176, 173)
     } else if [
         "FutureTech.Materials.Reflective_Floor_V2_Mat",
         "FutureTech.Materials.Reflective_Floor_B_Mat",
@@ -341,10 +342,12 @@ fn get_default_material(name: &str, side: Option<Team>) -> Option<StandardMateri
         match side {
             Some(Team::Blue) => Color::srgb_u8(86, 136, 199),
             Some(Team::Orange) => Color::srgb_u8(222, 145, 81),
-            None => Color::srgb_u8(131, 144, 115),
+            // Muted Shadow Gray (#999794) - Neutral boundaries and glass highlights
+            None => Color::srgb_u8(153, 151, 148),
         }
     } else if name == "OOBFloor_MAT_CUSTOM" {
-        Color::srgb_u8(41, 2, 0)
+        // Matte Obsidian Black (#1C1B1A) - Out-of-bounds floor surface
+        Color::srgb_u8(28, 27, 26)
     } else if [
         "FutureTech.Materials.Frame_01_MIC",
         "FutureTech.Materials.Frame_01_V2_Mat",
@@ -360,7 +363,8 @@ fn get_default_material(name: &str, side: Option<Team>) -> Option<StandardMateri
         || name.contains("PaintedLine_MIC")
     {
         // tertiary
-        Color::srgb_u8(55, 30, 48)
+        // Muted Shadow Gray (#999794) - Goal frames, rim nets, borders, and painted lines
+        Color::srgb_u8(153, 151, 148)
     } else if [
         "FutureTech.Materials.Frame_01_White_MIC",
         "Graybox_Assets.Materials.ForceFieldCage_Solid_Mat",
@@ -369,14 +373,16 @@ fn get_default_material(name: &str, side: Option<Team>) -> Option<StandardMateri
     {
         Color::from(css::SILVER)
     } else if name == "FutureTech.Materials.CrossHatched_Grate_MIC" {
-        Color::from(css::TOMATO)
+        // Muted Steel Gray (#807E7C) - Cross-hatched metal grates on floor
+        Color::srgb_u8(128, 126, 124)
     } else if [
         "Pickup_Boost.Materials.BoostPad_Small_MIC",
         "Pickup_Boost.Materials.BoostPad_Large_MIC",
     ]
     .contains(&name)
     {
-        Color::srgb_u8(152, 29, 23)
+        // Muted Charcoal Gray (#807E7C) - Base rings of small and large boost pads
+        Color::srgb_u8(128, 126, 124)
     } else if name == "Goal.Materials.GoalGenerator_Team2_MIC" || name.contains("CrossHatched") {
         Color::NONE
     } else if name.contains("Advert") || name.contains("DarkMetal") {
