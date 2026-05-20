@@ -94,6 +94,7 @@ fn setup(mut commands: Commands, mut egui_global_settings: ResMut<EguiGlobalSett
         },
         Hdr,
         PrimaryEguiContext,
+        bevy::camera::visibility::RenderLayers::layer(1),
     ));
 
     commands.spawn((
