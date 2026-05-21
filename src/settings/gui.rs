@@ -134,8 +134,8 @@ fn update_render_info(
         return;
     }
 
-    render_info.groups = renders.groups.len();
-    render_info.items = renders.groups.values().map(Vec::len).sum();
+    render_info.groups = renders.next.len();
+    render_info.items = renders.next.values().map(Vec::len).sum();
 }
 
 fn ui_system(
@@ -244,7 +244,8 @@ fn ui_system(
 
 fn update_allow_rendering(options: Res<Options>, mut do_rendering: ResMut<DoRendering>, mut renders: ResMut<RenderGroups>) {
     if !options.allow_rendering {
-        renders.groups.clear();
+        renders.last.clear();
+        renders.next.clear();
     }
 
     do_rendering.0 = options.allow_rendering;

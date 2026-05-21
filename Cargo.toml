@@ -91,5 +91,13 @@ strip = false
 inherits = "release"
 opt-level = "s"
 
+# Fast compilation mode: full optimizations for code performance, but LTO disabled,
+# high parallel codegen, and no stripping to minimize compile/link time.
+[profile.fast]
+inherits = "release"
+lto = false
+codegen-units = 256
+strip = false
+
 [lints.clippy]
 all = "warn"

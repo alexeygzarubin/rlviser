@@ -648,13 +648,15 @@ fn apply_udp_updates(
                 return;
             }
             UdpUpdate::State(new_state) => {
+                render_groups.last = render_groups.next.clone();
                 new_game_state = Some(new_state);
             }
             UdpUpdate::AddRender(add_render) => {
-                render_groups.groups.insert(add_render.id, add_render.commands);
+                render_groups.next.insert(add_render.id, add_render.commands);
             }
             UdpUpdate::RemoveRender(remove_render) => {
-                render_groups.groups.remove(&remove_render.id);
+                render_groups.last.remove(&remove_render.id);
+                render_groups.next.remove(&remove_render.id);
             }
             UdpUpdate::Speed(speed) => {
                 last_packet_time_elapsed.reset();
@@ -1453,17 +1455,14 @@ fn interpolate_calc_next_ball_rot(mut states: ResMut<GameStates>) {
 }
 
 fn interpolate_packets(
-    time: Res<Time>,
     game_speed: Res<GameSpeed>,
     last_packet_time_elapsed: Res<LastPacketTimesElapsed>,
     mut states: ResMut<GameStates>,
-    mut packet_time_elapsed: ResMut<PacketTimeElapsed>,
+    packet_time_elapsed: Res<PacketTimeElapsed>,
 ) {
     if game_speed.paused {
         return;
     }
-
-    packet_time_elapsed.tick(time.delta());
 
     let delta_time = packet_time_elapsed.elapsed_secs();
 
@@ -1594,7 +1593,7 @@ impl GameStates {
 }
 
 #[derive(Resource, Default, DerefMut, Deref)]
-struct PacketTimeElapsed(Stopwatch);
+pub struct PacketTimeElapsed(pub Stopwatch);
 
 #[derive(Resource, Default)]
 pub struct LastPacketTimesElapsed {
@@ -1618,7 +1617,7 @@ impl LastPacketTimesElapsed {
         self.len = 0;
     }
 
-    fn avg(&self) -> f32 {
+    pub fn avg(&self) -> f32 {
         if self.len == 0 {
             return 1. / 120.;
         }
