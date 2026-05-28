@@ -43,6 +43,10 @@ pub struct Options {
     pub packet_smoothing: usize,
     pub calc_ball_rot: bool,
     pub render_environment: bool,
+    pub window_width: f32,
+    pub window_height: f32,
+    pub window_x: Option<i32>,
+    pub window_y: Option<i32>,
 }
 
 impl Default for Options {
@@ -69,6 +73,10 @@ impl Default for Options {
             packet_smoothing: 1,
             calc_ball_rot: true,
             render_environment: true,
+            window_width: 1280.,
+            window_height: 720.,
+            window_x: None,
+            window_y: None,
         }
     }
 }
@@ -77,7 +85,7 @@ impl Options {
     const FILE_NAME: &'static str = "settings.txt";
 
     #[inline]
-    fn default_read_file() -> Self {
+    pub fn default_read_file() -> Self {
         Self::read_from_file().unwrap_or_else(|_| Self::create_file_from_defualt())
     }
 
@@ -117,6 +125,10 @@ impl Options {
                 "packet_smoothing" => options.packet_smoothing = serde_json::from_str(value).unwrap(),
                 "calc_ball_rot" => options.calc_ball_rot = value.parse().unwrap(),
                 "render_environment" => options.render_environment = value.parse().unwrap(),
+                "window_width" => options.window_width = value.parse().unwrap_or(1280.),
+                "window_height" => options.window_height = value.parse().unwrap_or(720.),
+                "window_x" => options.window_x = value.parse().ok(),
+                "window_y" => options.window_y = value.parse().ok(),
                 _ => println!("Unknown key {key} with value {value}"),
             }
         }
@@ -156,6 +168,14 @@ impl Options {
         file.write_fmt(format_args!("packet_smoothing={}\n", self.packet_smoothing))?;
         file.write_fmt(format_args!("calc_ball_rot={}\n", self.calc_ball_rot))?;
         file.write_fmt(format_args!("render_environment={}\n", self.render_environment))?;
+        file.write_fmt(format_args!("window_width={}\n", self.window_width))?;
+        file.write_fmt(format_args!("window_height={}\n", self.window_height))?;
+        if let Some(x) = self.window_x {
+            file.write_fmt(format_args!("window_x={}\n", x))?;
+        }
+        if let Some(y) = self.window_y {
+            file.write_fmt(format_args!("window_y={}\n", y))?;
+        }
 
         Ok(())
     }
@@ -182,6 +202,10 @@ impl Options {
             || self.packet_smoothing != other.packet_smoothing
             || self.calc_ball_rot != other.calc_ball_rot
             || self.render_environment != other.render_environment
+            || self.window_width != other.window_width
+            || self.window_height != other.window_height
+            || self.window_x != other.window_x
+            || self.window_y != other.window_y
     }
 }
 

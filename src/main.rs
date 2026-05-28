@@ -53,6 +53,8 @@ fn main() {
     #[cfg(debug_assertions)]
     assets::umodel::uncook().unwrap();
 
+    let options = settings::options::Options::default_read_file();
+
     App::new()
         .insert_resource(ServerPort {
             primary_port,
@@ -84,6 +86,11 @@ fn main() {
                     primary_window: Some(Window {
                         title: "RLViser-rs".into(),
                         present_mode: PresentMode::AutoNoVsync,
+                        resolution: (options.window_width as u32, options.window_height as u32).into(),
+                        position: match (options.window_x, options.window_y) {
+                            (Some(x), Some(y)) => bevy::window::WindowPosition::At(IVec2::new(x, y)),
+                            _ => bevy::window::WindowPosition::Automatic,
+                        },
                         ..default()
                     }),
                     ..default()
